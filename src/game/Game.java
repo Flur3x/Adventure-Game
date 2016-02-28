@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
+import java.util.Set;
 
 import rooms.AbstractRoom;
 import rooms.NormalRoom;
@@ -264,17 +265,16 @@ public class Game extends Observable {
 	 */
 	private void createPlayer() {
 		Random rnd = new Random();
-		Object[] roomIDs = rooms.keySet().toArray();
-		Object roomID = roomIDs[rnd.nextInt(roomIDs.length)];
-		
-		
+		Integer[] roomIDs = rooms.keySet().toArray(new Integer[0]);
+		Integer roomID = roomIDs[rnd.nextInt(roomIDs.length)];
+
 		// As long as random room is a magic room, search for another room
-		while (rooms.get((int) roomID).isMagicRoom()) {
+		while (rooms.get(roomID).isMagicRoom()) {
 			roomID = roomIDs[rnd.nextInt(roomIDs.length)];
 		}
 		
 		// Finally, set the player position
-		player.setCurrentRoom(rooms.get((int) roomID));
+		player.setCurrentRoom(rooms.get(roomID));
 	}
 	
 	/**
@@ -332,20 +332,22 @@ public class Game extends Observable {
 	 */
 	private void createMagicRooms() {
 		for (int i = 0; i < 2; i++) {
-			Object[] roomIDs = rooms.keySet().toArray();
-			Object roomID = roomIDs[new Random().nextInt(roomIDs.length)];
+
+			Integer[] roomIDs = rooms.keySet().toArray(new Integer[0]);
+			Integer roomID = roomIDs[new Random().nextInt(roomIDs.length)];
+
 			if (rooms.get((int) roomID).isMagicRoom()) { // If the selected room is a magic room already, start the loop again
 				if (i != 0) {
 						i = i - 1;
 					}
 				continue;
 			} else {
-				int north =	rooms.get((int) roomID).getNorth(); // Transfer important data from RoomA to the new RoomB
-				int east =	rooms.get((int) roomID).getEast();
-				int south =	rooms.get((int) roomID).getSouth();
-				int west =	rooms.get((int) roomID).getWest();
+				int north =	rooms.get(roomID).getNorth(); // Transfer important data from RoomA to the new RoomB
+				int east =	rooms.get(roomID).getEast();
+				int south =	rooms.get(roomID).getSouth();
+				int west =	rooms.get(roomID).getWest();
 				MagicRoom room = (MagicRoom) magicFactory.createRoom((int) roomID); // Initalize new RoomB = Magic room
-				rooms.put((int) roomID, room); // Save the new magic room on the map
+				rooms.put(roomID, room); // Save the new magic room on the map
 				room.setNorth(north); // Set the same variables as for the previous object (RoomA)
 				room.setEast(east);
 				room.setSouth(south);
@@ -354,9 +356,9 @@ public class Game extends Observable {
 				String randomQuestion = getQuestion(Settings.getQuestions()); // Import one random question/answer combination
 				String[] splittedLine = randomQuestion.split(":"); // Split the question from the answer
 				
-				((MagicRoom) rooms.get((int) roomID)).setQuestion(splittedLine[0]); // Set the question for this room
-				((MagicRoom) rooms.get((int) roomID)).setAnswer(splittedLine[1]); // Set the answer for this room
-				((MagicRoom) rooms.get((int) roomID)).lock(); // Lock the room, so that it's locked till the question could be answered
+				((MagicRoom) rooms.get(roomID)).setQuestion(splittedLine[0]); // Set the question for this room
+				((MagicRoom) rooms.get(roomID)).setAnswer(splittedLine[1]); // Set the answer for this room
+				((MagicRoom) rooms.get(roomID)).lock(); // Lock the room, so that it's locked till the question could be answered
 			}
 		}
 	}

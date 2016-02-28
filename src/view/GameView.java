@@ -135,7 +135,7 @@ public class GameView extends JFrame implements Observer {
 		bottomRight.add(consoleScrollPane, BorderLayout.NORTH);
 		
 		// Initialization of the text input field
-		JTextField textField = new JTextField(10);
+		final JTextField textField = new JTextField(10);
 		textField.addActionListener(new ActionListener() {
 		  public void actionPerformed(ActionEvent e) {
 		    controller.consoleInput(textField.getText());
@@ -413,8 +413,8 @@ class Dialog extends JDialog {
 	public void showCharacterSelection() {
 		this.setTitle("Choose character");
 		contentPane.setLayout(new FlowLayout());
-		String[] characters = Settings.getCharacters();
-		JButton[] buttons = new JButton[characters.length];
+		final String[] characters = Settings.getCharacters();
+		final JButton[] buttons = new JButton[characters.length];
 		
 		for (int i = 0; i < characters.length; i++) {
 			URL imgURL = getClass().getResource(Settings.getCharactersFilePath() + characters[i].toLowerCase() + Settings.getCharactersImageFormat());
